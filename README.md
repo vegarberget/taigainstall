@@ -1,5 +1,8 @@
 # taigainstall
-A script to auto install taiga for production on a single machine.
+A script to auto install taiga(https://taiga.io/) for production on a single machine.
+Following this guideline:
+http://taigaio.github.io/taiga-doc/dist/setup-production.html
+
 
 ## Create a user named taiga, and give it root permissions
 
