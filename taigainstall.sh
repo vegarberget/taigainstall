@@ -104,7 +104,7 @@ npm install
 
 sudo cat ~/taigainstall/taiga-events/config.json | sed 's/theveryultratopsecretkey/$PASSWORD/' > ~/taiga-events/config.json
 
-sudo cat ~/taigainstall/etc/systemd/system/taiga_events.service >> /etc/systemd/system/taiga_events.service
+sudo cp ~/taigainstall/etc/systemd/system/taiga_events.service /etc/systemd/system/taiga_events.service
 
 sudo systemctl daemon-reload
 sudo systemctl start taiga_events
@@ -112,7 +112,7 @@ sudo systemctl enable taiga_events
 
 ## START AND EXPOSE TAIGA
 
-sudo cat ~/taigainstall/etc/systemd/system/taiga.service >> /etc/systemd/system/taiga.service
+sudo cp ~/taigainstall/etc/systemd/system/taiga.service /etc/systemd/system/taiga.service
 
 sudo systemctl daemon-reload
 sudo systemctl start taiga
@@ -124,6 +124,6 @@ sudo rm /etc/nginx/sites-enabled/default
 
 mkdir -p ~/logs
 
-sudo cat ~/taigainstall/etc/nginx/conf.d/taiga.conf > /etc/nginx/conf.d/taiga.conf
+sudo cp ~/taigainstall/etc/nginx/conf.d/taiga.conf /etc/nginx/conf.d/taiga.conf
 
 sudo systemctl restart nginx
