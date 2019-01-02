@@ -67,7 +67,7 @@ cd taiga-back
 git checkout stable
 
 mkvirtualenv -p /usr/bin/python3 taiga
-
+pip install --upgrade pip
 pip install -r requirements.txt
 
 python manage.py migrate --noinput
