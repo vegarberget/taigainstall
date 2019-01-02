@@ -5,6 +5,7 @@ export INTERACTIVE=${INTERACTIVE:="true"}
 export PVS=${INTERACTIVE:="true"}
 export DOMAIN=${DOMAIN:="$(curl -s ipinfo.io/ip).nip.io"}
 export USERNAME=${USERNAME:="taiga"}
+export LOCALE=${LOCALE:="en_US.utf8"}
 export PASSWORD=${PASSWORD:=password}
 export SCRIPT_REPO=${SCRIPT_REPO:="https://raw.githubusercontent.com/vegarberget/taigainstall/master/taigainstall.sh"}
 export IP=${IP:="$(ip route get 8.8.8.8 | awk '{print $NF; exit}')"}
@@ -16,7 +17,7 @@ if [ "$INTERACTIVE" = "true" ]; then
 		export DOMAIN="$choice";
 	fi
 
-	read -rp "Username: ($USERNAME): " choice;
+	read -rp "Username: (taiga): " choice;
 	if [ "$choice" != "" ] ; then
 		export USERNAME="$choice";
 	fi
@@ -26,6 +27,11 @@ if [ "$INTERACTIVE" = "true" ]; then
 		export PASSWORD="$choice";
 	fi
 
+		read -rp "Locale: ($LOCALE): " choice;
+	if [ "$choice" != "" ] ; then
+		export LOCALE="$choice";
+	fi
+
 	echo
 
 fi
@@ -33,31 +39,25 @@ fi
 echo "******"
 echo "* Your domain is $DOMAIN "
 echo "* Your IP is $IP "
-echo "* Your username is $USERNAME "
+echo "* Your username is taiga "
 echo "* Your password is $PASSWORD "
 echo "******"
 
 ## Install requirements
 
 sudo apt-get update
-sudo apt-get install -y build-essential binutils-doc autoconf flex bison libjpeg-dev libfreetype6-dev zlib1g-dev libzmq3-dev libgdbm-dev libncurses5-dev automake libtool libffi-dev curl git tmux gettext nginx rabbitmq-server redis-server postgresql-9.5 postgresql-contrib-9.5 postgresql-doc-9.5 postgresql-server-dev-9.5 python3 python3-pip python-dev python3-dev python-pip virtualenvwrapper libxml2-dev libxslt-dev libssl-dev libffi-dev
+sudo apt-get install -y build-essential binutils-doc autoconf flex whois bison libjpeg-dev libfreetype6-dev zlib1g-dev libzmq3-dev libgdbm-dev libncurses5-dev automake libtool libffi-dev curl git tmux gettext nginx rabbitmq-server redis-server postgresql-9.5 postgresql-contrib-9.5 postgresql-doc-9.5 postgresql-server-dev-9.5 python3 python3-pip python-dev python3-dev python-pip virtualenvwrapper libxml2-dev libxslt-dev libssl-dev libffi-dev
 
-## Create a user named $USERNAME, and give it root permissions
-
-sudo adduser $USERNAME
-sudo adduser $USERNAME sudo
-sudo su $USERNAME
-cd ~
 
 ## Configure postgresql with the initial user and database:
-sudo -u postgres createuser $USERNAME
-sudo -u postgres createdb $USERNAME -O $USERNAME --encoding='utf-8' --locale=en_US.utf8 --template=template0
+sudo -u postgres createuser taiga
+sudo -u postgres createdb taiga -O taiga --encoding='utf-8' --locale=$LOCALE --template=template0
 
 ## Create a user named taiga, and a virtualhost for RabbitMQ (taiga-events)
 
-sudo rabbitmqctl add_user $USERNAME PASSWORD_FOR_EVENTS
-sudo rabbitmqctl add_vhost $USERNAME
-sudo rabbitmqctl set_permissions -p $USERNAME $USERNAME ".*" ".*" ".*"
+sudo rabbitmqctl add_user taiga PASSWORD_FOR_EVENTS
+sudo rabbitmqctl add_vhost taiga
+sudo rabbitmqctl set_permissions -p taiga taiga ".*" ".*" ".*"
 
 ## BACKEND CONFIGURATION
 
@@ -66,7 +66,7 @@ git clone https://github.com/taigaio/taiga-back.git taiga-back
 cd taiga-back
 git checkout stable
 
-mkvirtualenv -p /usr/bin/python3 $USERNAME
+mkvirtualenv -p /usr/bin/python3 taiga
 
 pip install -r requirements.txt
 
@@ -90,7 +90,7 @@ git clone https://github.com/taigaio/taiga-front-dist.git taiga-front-dist
 cd taiga-front-dist
 git checkout stable
 
-cat ~/taigainstall/taiga-front-dist/dist/conf.json | sed 's/example.com/$DOMAIN/ > ~/taiga-front-dist/dist/conf.json
+cat ~/taigainstall/taiga-front-dist/dist/conf.json | sed 's/example.com/$DOMAIN/' > ~/taiga-front-dist/dist/conf.json
 
 ## EVENTS INSTALLATION
 
