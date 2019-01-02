@@ -10,4 +10,6 @@ cd ~
 
 Then run:
 
-git clone 
+git clone https://github.com/vegarberget/taigainstall.git
+
+~/taigainstall/taigainstall.sh
