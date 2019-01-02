@@ -102,9 +102,9 @@ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs
 npm install
 
-cat ~/taigainstall/taiga-events/config.json | sed 's/theveryultratopsecretkey/$PASSWORD/' > ~/taga-events/config.json
+sudo cat ~/taigainstall/taiga-events/config.json | sed 's/theveryultratopsecretkey/$PASSWORD/' > ~/taiga-events/config.json
 
-cat ~/taigainstall/etc/systemd/system/taiga_events.service >> /etc/systemd/system/taiga_events.service
+sudo cat ~/taigainstall/etc/systemd/system/taiga_events.service >> /etc/systemd/system/taiga_events.service
 
 sudo systemctl daemon-reload
 sudo systemctl start taiga_events
@@ -112,7 +112,7 @@ sudo systemctl enable taiga_events
 
 ## START AND EXPOSE TAIGA
 
-cat ~/taigainstall/etc/systemd/system/taiga.service >> /etc/systemd/system/taiga.service
+sudo cat ~/taigainstall/etc/systemd/system/taiga.service >> /etc/systemd/system/taiga.service
 
 sudo systemctl daemon-reload
 sudo systemctl start taiga
@@ -124,6 +124,6 @@ sudo rm /etc/nginx/sites-enabled/default
 
 mkdir -p ~/logs
 
-cat ~/taigainstall/etc/nginx/conf.d/taiga.conf > /etc/nginx/conf.d/taiga.conf
+sudo cat ~/taigainstall/etc/nginx/conf.d/taiga.conf > /etc/nginx/conf.d/taiga.conf
 
 sudo systemctl restart nginx
