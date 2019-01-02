@@ -77,3 +77,53 @@ python manage.py compilemessages
 python manage.py collectstatic --noinput
 
 python manage.py sample_data
+
+## Change local.py settings according to your enviroment
+
+cat ~taigainstall/taiga-back/settings/local.py | sed 's/example.com/$DOMAIN/' > ~/taiga-back/settings/local.py
+cat ~taiga-back/settings/local.py | sed 's/theveryultratopsecretkey/$PASSWORD/' > ~/taiga-back/settings/local.py
+
+## FRONTEND INSTALLATION
+
+cd ~
+git clone https://github.com/taigaio/taiga-front-dist.git taiga-front-dist
+cd taiga-front-dist
+git checkout stable
+
+cat ~/taigainstall/taiga-front-dist/dist/conf.json | sed 's/example.com/$DOMAIN/ > ~/taiga-front-dist/dist/conf.json
+
+## EVENTS INSTALLATION
+
+cd ~
+git clone https://github.com/taigaio/taiga-events.git taiga-events
+cd taiga-events
+
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs
+npm install
+
+cat ~/taigainstall/taiga-events/config.json | sed 's/theveryultratopsecretkey/$PASSWORD/' > ~/taga-events/config.json
+
+cat ~/taigainstall/etc/systemd/system/taiga_events.service >> /etc/systemd/system/taiga_events.service
+
+sudo systemctl daemon-reload
+sudo systemctl start taiga_events
+sudo systemctl enable taiga_events
+
+## START AND EXPOSE TAIGA
+
+cat ~/taigainstall/etc/systemd/system/taiga.service >> /etc/systemd/system/taiga.service
+
+sudo systemctl daemon-reload
+sudo systemctl start taiga
+sudo systemctl enable taiga
+
+## NGINX
+
+sudo rm /etc/nginx/sites-enabled/default
+
+mkdir -p ~/logs
+
+cat ~/taigainstall/etc/nginx/conf.d/taiga.conf > /etc/nginx/conf.d/taiga.conf
+
+sudo systemctl restart nginx

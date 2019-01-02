@@ -1,0 +1,7 @@
+{
+    "url": "amqp://taiga:PASSWORD_FOR_EVENTS@localhost:5672/taiga",
+    "secret": "theveryultratopsecretkey",
+    "webSocketServer": {
+        "port": 8888
+    }
+}

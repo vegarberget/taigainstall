@@ -1,0 +1,13 @@
+[Unit]
+Description=taiga_events
+After=network.target
+
+[Service]
+User=taiga
+WorkingDirectory=/home/taiga/taiga-events
+ExecStart=/bin/bash -c "node_modules/coffeescript/bin/coffee index.coffee"
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target
